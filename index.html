@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Timer</title>
+    <link rel="shortcut icon" type="image/png" href="speaking timer.png">
+    <style>
+               .container
+        {
+            margin-top: 30px;
+            width:80%;
+            height:50%;
+            background-color: whitesmoke;
+            border: 5px solid black;
+            padding-bottom: 150px;
+        } 
+
+
+        .btn1
+{
+    color:forestgreen;
+    padding: 10px 20px 10px 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: forestgreen;
+    border-radius: 4px;
+}
+.btn1:hover
+{
+   color: white;
+   background-color: forestgreen;
+   border-color: forestgreen;
+   box-shadow: 5px 5px 2px grey;
+}
+#stopwatch-container {
+    width: 80%;
+    margin: 6% auto;
+    padding: 5% 0;
+    color: #e7eafb;
+    text-align: center;
+    background-color: #202020;
+    box-shadow: 1px 0px 4px 2px #9c9a9a;
+    border-radius: 20px;
+   }
+ 
+   #stopwatch {
+    font-size: 20px;
+    margin-bottom: 10px;
+   }  
+
+body{
+        background-image: url('speaking timer.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed; 
+        background-size: 100% 100%;
+          }  
+   
+    </style>
+  
+</head>
+<body>
+    <center>
+        <div class="container">
+            <h1>Speaking timer</h1>
+            <label>*Set time:</label>
+            <input type="time" id="tm" required>
+            <br>
+            <br>
+            <br>
+            <label>*Enter Your Message:</label>
+            <textarea id="txa" required></textarea>
+            <br>
+            <br>
+            <br>
+            <label>Choose voice:</label>
+           <select id="voc">
+             <option value="mv">Male Voice</option>
+             <option value="fv">Female Voice</option>
+           </select>
+           <br>
+            <br>
+            <br>
+
+            <div id="stopwatch">00:00:00</div>
+            <button onclick="fun1(true)" class="btn1" id="start-btn">Start Timer</button>
+            <button class="btn1" onclick="fun2()">Reset</button>
+
+
+            <br>
+            <br>
+            <br>
+            <p>NOTE: * Required field.Keep your device volume up for listen voice</p>
+           
+        </div>
+
+    </center>
+    <script type="text/javascript">
+
+
+
+var stopwatch = document.getElementById("stopwatch");
+    var startBtn = document.getElementById("start-btn");
+    var timeoutId = null;
+    var ms = 0;
+    var sec = 0;
+     var min = 0;
+
+
+     
+ function fun3()
+ {
+    
+    const voices = window.speechSynthesis.getVoices();
+    var txt2=document.getElementById("txa").value;
+    var txt3=document.querySelector("#voc").value;
+    console.log(txt3)
+    if ('speechSynthesis' in window) { 
+            let working = new SpeechSynthesisUtterance(txt2); 
+            
+            
+            if(txt3==="mv")
+           {
+            
+            working.voice=voices[1];
+            window.speechSynthesis.speak(working); 
+           }
+           else
+           {
+            working.voice=voices[2];
+            window.speechSynthesis.speak(working); 
+            console.log("hi")
+           }
+            } 
+   
+            else{ 
+            alert("Browser doesnot support voice method");
+            }
+
+
+
+ }
+
+
+
+ window.speechSynthesis.onvoiceschanged = function() {
+    fun3(); // Refresh the voices list
+};
+
+
+
+
+     function start(flag) 
+   {
+
+    var txt1=document.getElementById("tm").value;
+    if (flag) {
+        startBtn.disabled = true;
+    }
+ 
+    timeoutId = setTimeout(function() {
+        ms = parseInt(ms);
+        sec = parseInt(sec);
+        min = parseInt(min);
+ 
+        ms++;
+ 
+        if (ms == 100) {
+            sec = sec + 1;
+            ms = 0;
+        }
+        if (sec == 60) {
+            min = min + 1;
+            sec = 0;
+        }
+        if (ms < 10) {
+            ms = '0' + ms;
+        }
+        if (sec < 10) {
+            sec = '0' + sec;
+        }
+        if (min < 10) {
+            min = '0' + min;
+        }
+ 
+        stopwatch.innerHTML = min + ':' + sec + ':' + ms;
+        var x=min+':'+sec
+       if(txt1==x)
+            {
+                clearTimeout(timeoutId);
+                fun3();
+            }
+        // calling start() function recursivly to continue stopwatch
+        else{ 
+            start();
+
+        }
+       
+ 
+    }, 10); // setTimeout delay time 10 milliseconds
+}
+     
+        function fun1()
+        {
+            
+
+            var txt1=document.getElementById("tm").value;
+            
+            var txt2=document.getElementById("txa").value;
+            
+            
+            if (txt1!="" && txt2!="")
+        {
+
+            start();
+            var a=document.getElementById("start-btn")
+            a.disabled=true;
+            a.innerText="Start disabled";
+            a.style.backgroundColor="grey";
+            a.style.color="white";
+            a.style.cursor="not-allowed"
+
+        }
+      else
+      {
+        alert("Please provide requiered field")
+      }
+        }
+
+
+        function fun2()
+        {
+            setTimeout(function(){
+    location.reload();
+}, 500);
+        }
+    </script>
+</body>
+</html>
